@@ -730,3 +730,65 @@ source /opt/ros/humble/setup.bash
 source ~/ros2_ws/install/setup.bash
 ros2 topic echo /cmd_vel
 ```
+
+
+# Запуск програми
+
+Відкриваємо перший термінал:
+
+```bash
+source /opt/ros/humble/setup.bash
+cd ~/ros2_ws
+colcon build --packages-select motion_control robot_gui
+source install/setup.bash
+```
+
+Збираємо обидва пакети, оскільки motion_control містить оновлений статус, а robot_gui — графічний інтерфейс.
+
+Запускаємо Motion Node
+У першому терміналі:
+
+```bash
+ros2 run motion_control motion_node
+```
+
+Запускаємо графічний інтерфейс
+Відкриваємо другий термінал:
+
+```bash
+source /opt/ros/humble/setup.bash
+cd ~/ros2_ws
+source install/setup.bash
+ros2 run robot_gui gui_node
+```
+
+Перевіряємо, що GUI публікує команди
+Відкриваємо третій термінал:
+
+```bash
+source /opt/ros/humble/setup.bash
+cd ~/ros2_ws
+source install/setup.bash
+ros2 topic echo /cmd_vel
+```
+
+Кожне натискання має формувати відповідне повідомлення Twist. Якщо echo показує потрібні значення, це підтверджує, що кнопки GUI публікують команди в /cmd_vel.
+
+Перевіряємо зворотний зв'язок — /motion_status
+Відкриваємо четвертий термінал:
+
+```bash
+source /opt/ros/humble/setup.bash
+cd ~/ros2_ws
+source install/setup.bash
+ros2 topic echo /motion_status
+```
+
+Тепер натискаємо в GUI «Вперед».
+Маємо побачити три результати:
+1. GUI
+Поле статусу відображає команду та отриманий статус руху.
+2. Motion Node
+У першому терміналі видно, що нода отримала й обробила команду.
+3. /motion_status
+У четвертому терміналі з'являється повідомлення типу std_msgs/msg/String зі статусом.
